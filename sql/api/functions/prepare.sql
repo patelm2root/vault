@@ -3,10 +3,10 @@
  * analyzing indexes and calling the concept.prepare() function if it exists. The concept.prepare()
  * is intended to refresh any materialized views that have been created in the concept schema.
  *
- * Returns void. If an error occurs, a generic warning will be raised.
+ * Returns true on success or false on error.
  */
 CREATE OR REPLACE FUNCTION api.prepare()
-  RETURNS void AS
+  RETURNS boolean AS
 $BODY$
 	BEGIN
     BEGIN
@@ -20,10 +20,13 @@ $BODY$
                  WHERE f.proname = 'prepare'
                    AND s.nspname = 'concept' )) THEN
         EXECUTE concept.prepare();
+
+        --Return true to indicate that the preparation succeeded.
+        RETURN TRUE;
       END IF;
     EXCEPTION WHEN others THEN
-      --Pass generic error information back to the client.
-      RAISE WARNING 'Error occured in api.prepare(). See server log.';
+      --Return false to indicate that the preparation failed.
+      RETURN FALSE;
     END;
   END;
 $BODY$

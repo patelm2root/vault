@@ -12,7 +12,7 @@
  * statement. The signature will be verified against the p_statement and the public key. *TODO*
  * This is required.
  *
- * Returns void. If an error occurs, a generic warning will be raised.
+ * Returns true on success or false on error.
  *
  * Regardless of success or failure, a row will be inserted into the audit.change_log table.
  */
@@ -21,7 +21,7 @@ CREATE OR REPLACE FUNCTION api.change(
   p_statement text,
   p_signature text
 )
-  RETURNS void AS
+  RETURNS boolean AS
 $BODY$
   DECLARE
     v_start_time timestamp := now();
@@ -51,13 +51,19 @@ $BODY$
       INSERT INTO audit.change_log(change_id, statement, signature, username, start_time, finish_time, success, error_code, error_message)
       VALUES (p_change_id, p_statement, p_signature, CURRENT_USER, v_start_time, now(), TRUE, NULL, NULL);
 
+      --Return true to indicate that the change succeeded.
+      RETURN TRUE;
+
     EXCEPTION WHEN others THEN
       --Insert a row into the change_log to indicate that the change failed.
       INSERT INTO audit.change_log(change_id, statement, signature, username, start_time, finish_time, success, error_code, error_message)
       VALUES (p_change_id, p_statement, p_signature, CURRENT_USER, v_start_time, now(), FALSE, SQLSTATE, SQLERRM);
 
-      --Pass generic error information back to the client.
+      --Pass generic warning back to the client.
       RAISE WARNING 'Error occured in api.change(). See audit.change_log.';
+
+      --Return false to indicate that the change failed.
+      RETURN FALSE;
     END;
   END;
 $BODY$

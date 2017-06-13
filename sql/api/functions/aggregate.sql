@@ -14,8 +14,8 @@
  *
  * p_effective_date: The date to run the indicator as of. This is required.
  *
- * Returns a pair of integers (numerator and denominator) on success. If an error occurs, a
- * generic warning will be raised.
+ * Returns a pair of integers (numerator and denominator) on success. If an error occurs, then
+ * 0 rows are returned.
  *
  * Regardless of success or failure, a row will be inserted into the audit.aggregate_log table.
  */
