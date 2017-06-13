@@ -1,7 +1,7 @@
 CREATE TABLE audit.change_log
 (
   id bigserial NOT NULL PRIMARY KEY,
-  change_id bigint NOT NULL,
+  change_id bigint,
   statement text,
   signature text,
   username text not null,
