@@ -38,11 +38,6 @@ $BODY$
         RAISE EXCEPTION 'Signature could not be verified';
       END IF;
 
-      --Naively prevent leaks of data through raise/notify/copy commands.
-      IF(UPPER(p_statement) SIMILAR TO '%RAISE%|%NOTIFY%|%COPY%') THEN
-        RAISE EXCEPTION 'Blacklisted keyword found in p_statement';
-      END IF;
-
       --Execute the update that was provided through the p_statement parameter.
       --The privileges of api role should prevent certain statements.
       EXECUTE p_statement;
