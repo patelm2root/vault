@@ -44,3 +44,15 @@
 
   --The tally role needs the ability to execute all functions within the api schema.
   GRANT EXECUTE ON ALL FUNCTIONS IN SCHEMA api TO tally;
+
+
+/*************************************************************************************************/
+/* ADAPTER PERMISSIONS                                                                             */
+/*************************************************************************************************/
+  --The adapter role needs the ability to create it's own schemas.
+  GRANT CREATE ON DATABASE to adapter;
+
+  --The adapter role needs the ability to truncate, insert, update, delete etc all data in the
+  --universal schema.
+  GRANT USAGE ON SCHEMA universal to adapter;
+  GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA universal TO adapter;
