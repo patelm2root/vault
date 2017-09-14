@@ -55,4 +55,8 @@
   --The adapter role needs the ability to truncate, insert, update, delete etc all data in the
   --universal schema.
   GRANT USAGE ON SCHEMA universal to adapter;
+
+  --The adapter role needs the ability use sequences to generate keys.
+  GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA universal TO adapter;
+
   GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA universal TO adapter;
