@@ -50,7 +50,7 @@
 /* ADAPTER PERMISSIONS                                                                             */
 /*************************************************************************************************/
   --The adapter role needs the ability to create it's own schemas.
-  GRANT CREATE ON DATABASE to adapter;
+  GRANT CREATE ON DATABASE vault to adapter;
 
   --The adapter role needs the ability to truncate, insert, update, delete etc all data in the
   --universal schema.
