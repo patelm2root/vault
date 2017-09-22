@@ -14,3 +14,10 @@ CREATE UNIQUE INDEX idx_patient_id
   ON universal.patient
   USING btree
   (id);
+
+CREATE INDEX idx_patient_emr_id
+  ON universal.patient
+  USING btree
+  (emr_id COLLATE pg_catalog."default");
+
+ALTER TABLE universal.patient CLUSTER ON idx_patient_emr_id;
