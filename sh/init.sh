@@ -11,11 +11,23 @@ psql -a -v ON_ERROR_STOP=1 --username "$POSTGRES_USER" -d postgres <<-EOSQL
   DROP DATABASE IF EXISTS vault;
   CREATE DATABASE vault;
 
-  DROP ROLE IF EXISTS tally;
-  CREATE ROLE tally WITH LOGIN ENCRYPTED PASSWORD '$TALLY_PASSWORD';
+  DO
+  $body$
+  BEGIN
+    IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'tally') THEN
+      CREATE ROLE tally WITH LOGIN ENCRYPTED PASSWORD '$TALLY_PASSWORD';
+    END IF;
+  END
+  $body$;
 
-  DROP ROLE IF EXISTS adapter;
-  CREATE ROLE adapter WITH LOGIN ENCRYPTED PASSWORD '$ADAPTER_PASSWORD';
+  DO
+  $body$
+  BEGIN
+    IF NOT EXISTS (SELECT FROM pg_catalog.pg_user WHERE usename = 'adapter') THEN
+      CREATE ROLE adapter WITH LOGIN ENCRYPTED PASSWORD '$ADAPTER_PASSWORD';
+    END IF;
+  END
+  $body$;
 
   DROP ROLE IF EXISTS api;
 EOSQL
